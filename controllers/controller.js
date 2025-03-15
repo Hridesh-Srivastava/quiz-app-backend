@@ -1,82 +1,3 @@
-// import Questions from "../models/questionSchema.js";
-// import Results from "../models/resultSchema.js";
-// import questions, { answers } from '../database/data.js';
-// import data from "../database/data.js";
-
-// /** get all questions */
-// export async function getQuestions(req, res) {
-//     try {
-//         res.json({ questions, answers });
-//     } catch (error) {
-//         res.json({ error });
-//     }
-// }
-
-// /** insert all questions */
-// export async function insertQuestions(req, res) {
-//     try {
-//         Questions.insertMany({ questions, answers }, function (err, data) {
-//             res.json({ msg: "Data Saved Successfully...!" });
-//         });
-//     } catch (error) {
-//         res.json({ error });
-//     }
-// }
-
-// /** Delete all Questions */
-// export async function dropQuestions(req, res) {
-//     try {
-//         await Questions.deleteMany();
-//         res.json({ msg: "Questions Deleted Successfully...!" });
-//     } catch (error) {
-//         res.json({ error });
-//     }
-// }
-
-// /** get all result */
-// export async function getResult(req, res) {
-//     try {
-//         const r = await Results.find();
-//         res.json(r);
-//     } catch (error) {
-//         res.json({ error });
-//     }
-// }
-
-// /** post all result */
-// export async function storeResult(req, res) {
-//     try {
-//         const { username, email, registrationNumber, courseYear, result, attempts, points, achived } = req.body
-//         if (!username || !result) throw new Error('Data Not Provided...!')
-
-//         const newResult = await Results.create({ 
-//             username, 
-//             email, 
-//             registrationNumber, 
-//             courseYear, 
-//             result, 
-//             attempts, 
-//             points, 
-//             achived 
-//         })
-//         res.json({ msg: "Result Saved Successfully...!", data: newResult })
-
-//     } catch (error) {
-//         res.json({ error })
-//     }
-// }
-
-// /** delete all result */
-// export async function dropResult(req, res) {
-//     try {
-//         await Results.deleteMany();
-//         res.json({ msg: "Result Deleted Successfully...!" });
-//     } catch (error) {
-//         res.json({ error });
-//     }
-// }
-
-
 import Questions from "../models/questionSchema.js"
 import Results from "../models/resultSchema.js"
 import questions, { answers } from "../database/data.js"
@@ -84,20 +5,7 @@ import questions, { answers } from "../database/data.js"
 /** get all questions */
 export async function getQuestions(req, res) {
   try {
-    // First try to get questions from database
-    const dbQuestions = await Questions.find()
-
-    // If no questions in database, sync from data.js and return those
-    if (!dbQuestions || dbQuestions.length === 0) {
-      await syncQuestionsWithDB()
-      res.json({ questions, answers })
-    } else {
-      // Return questions from database
-      res.json({
-        questions: dbQuestions[0].questions,
-        answers: dbQuestions[0].answers,
-      })
-    }
+    res.json({ questions, answers })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -105,16 +13,6 @@ export async function getQuestions(req, res) {
 
 /** insert all questions */
 export async function insertQuestions(req, res) {
-  try {
-    await syncQuestionsWithDB()
-    res.json({ msg: "Questions Synced Successfully!" })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-/** Sync questions from data.js to MongoDB */
-async function syncQuestionsWithDB() {
   try {
     // First, clear existing questions
     await Questions.deleteMany({})
@@ -125,15 +23,13 @@ async function syncQuestionsWithDB() {
       answers: answers,
     })
 
-    if (!result) {
-      throw new Error("Failed to sync questions with database")
-    }
-
-    console.log("Questions synced successfully with database")
-    return result
+    res.json({
+      msg: "Questions Synced Successfully!",
+      count: questions.length,
+      data: result,
+    })
   } catch (error) {
-    console.error("Error syncing questions:", error)
-    throw error
+    res.status(500).json({ error: error.message })
   }
 }
 
