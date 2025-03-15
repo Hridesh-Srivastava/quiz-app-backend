@@ -3,9 +3,9 @@ import User from "../models/userSchema.js"
 /** create new user */
 export async function createUser(req, res) {
   try {
-    const { name, email, registrationNumber, courseYear } = req.body
+    const { name, email, registrationNumber, courseYear, section } = req.body
 
-    if (!name || !email || !registrationNumber || !courseYear) {
+    if (!name || !email || !registrationNumber || !courseYear || !section) {
       return res.status(400).json({ error: "All fields are required" })
     }
 
@@ -26,6 +26,7 @@ export async function createUser(req, res) {
       email,
       registrationNumber,
       courseYear,
+      section
     })
 
     res.json({

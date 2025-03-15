@@ -20,6 +20,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  section: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -27,4 +31,3 @@ const userSchema = new Schema({
 })
 
 export default mongoose.model("User", userSchema)
-
