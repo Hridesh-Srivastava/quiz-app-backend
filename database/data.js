@@ -35,8 +35,18 @@ export default [
       question: "Which of the following ",
       options: ["Dja", "Ret", "Anlar"],
     },
+    {
+      id: 8,
+      question: "Which ",
+      options: ["Da", "Rt", "An"],
+    },
+    {
+      id: 9,
+      question: "Which of these is a sea",
+      options: ["aaaa", "bbbb", "cccc"],
+    },
   ]
   
-  export const answers = [0, 1, 2, 1, 0, 0, 2] 
+  export const answers = [0, 1, 2, 1, 0, 0, 2, 1, 0] 
   
   
