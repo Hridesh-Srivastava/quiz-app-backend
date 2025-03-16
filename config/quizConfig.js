@@ -1,6 +1,6 @@
 export const QUIZ_CONFIG = {
-  DURATION_MINUTES: 5,
-  DURATION_SECONDS: 5 * 60, // 10 minutes in seconds
+  DURATION_MINUTES: 30,
+  DURATION_SECONDS: 30 * 60, // 10 minutes in seconds
   POINTS_PER_QUESTION: 5,
   PASS_PERCENTAGE: 50,
 }
