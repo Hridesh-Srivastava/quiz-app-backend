@@ -45,8 +45,13 @@ export default [
       question: "Which of these is a sea",
       options: ["aaaa", "bbbb", "cccc"],
     },
+    {
+      id: 10,
+      question: "Which of twewewehese is a sea",
+      options: ["aaaqwqwa", "bbberreb", "ccr4rrcc"],
+    },
   ]
   
-  export const answers = [0, 1, 2, 1, 0, 0, 2, 1, 0] 
+  export const answers = [0, 1, 2, 1, 0, 0, 2, 1, 0, 2] 
   
   
