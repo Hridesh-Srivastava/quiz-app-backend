@@ -17,7 +17,7 @@ export async function getTimer(req, res) {
       return res.status(400).json({ error: "Invalid registration number format" })
     }
 
-    const timer = await Timer.findOne({ registrationNumber })
+    const timer = await Timer.findOne({ registrationNumber }).maxTimeMS(5000) // Add timeout for MongoDB query
 
     if (!timer) {
       console.log("Timer not found for:", registrationNumber)
@@ -40,6 +40,12 @@ export async function getTimer(req, res) {
     res.json(timer)
   } catch (error) {
     console.error("Error in getTimer:", error)
+
+    // Check if it's a timeout error
+    if (error.name === "MongooseError" && error.message.includes("timed out")) {
+      return res.status(503).json({ error: "Database operation timed out. Please try again." })
+    }
+
     res.status(500).json({ error: error.message })
   }
 }
@@ -60,8 +66,8 @@ export async function createTimer(req, res) {
       return res.status(400).json({ error: "Invalid registration number format" })
     }
 
-    // Check if timer already exists
-    const existingTimer = await Timer.findOne({ registrationNumber })
+    // Check if timer already exists with timeout
+    const existingTimer = await Timer.findOne({ registrationNumber }).maxTimeMS(5000)
 
     if (existingTimer) {
       // Update existing timer
@@ -83,6 +89,12 @@ export async function createTimer(req, res) {
     res.json(timer)
   } catch (error) {
     console.error("Error in createTimer:", error)
+
+    // Check if it's a timeout error
+    if (error.name === "MongooseError" && error.message.includes("timed out")) {
+      return res.status(503).json({ error: "Database operation timed out. Please try again." })
+    }
+
     res.status(500).json({ error: error.message })
   }
 }
@@ -104,7 +116,7 @@ export async function updateTimer(req, res) {
       return res.status(400).json({ error: "Invalid registration number format" })
     }
 
-    const timer = await Timer.findOne({ registrationNumber })
+    const timer = await Timer.findOne({ registrationNumber }).maxTimeMS(5000)
 
     if (!timer) {
       console.log("Timer not found for update:", registrationNumber)
@@ -126,6 +138,12 @@ export async function updateTimer(req, res) {
     res.json(timer)
   } catch (error) {
     console.error("Error in updateTimer:", error)
+
+    // Check if it's a timeout error
+    if (error.name === "MongooseError" && error.message.includes("timed out")) {
+      return res.status(503).json({ error: "Database operation timed out. Please try again." })
+    }
+
     res.status(500).json({ error: error.message })
   }
 }
@@ -146,12 +164,18 @@ export async function deleteTimer(req, res) {
       return res.status(400).json({ error: "Invalid registration number format" })
     }
 
-    const result = await Timer.deleteOne({ registrationNumber })
+    const result = await Timer.deleteOne({ registrationNumber }).maxTimeMS(5000)
     console.log("Timer deletion result:", result)
 
     res.json({ message: "Timer deleted successfully" })
   } catch (error) {
     console.error("Error in deleteTimer:", error)
+
+    // Check if it's a timeout error
+    if (error.name === "MongooseError" && error.message.includes("timed out")) {
+      return res.status(503).json({ error: "Database operation timed out. Please try again." })
+    }
+
     res.status(500).json({ error: error.message })
   }
 }

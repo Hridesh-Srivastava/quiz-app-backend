@@ -3,7 +3,7 @@ import morgan from "morgan"
 import cors from "cors"
 import { config } from "dotenv"
 import router from "./router/route.js"
-
+import mongoose from "mongoose"
 import connect from "./database/conn.js"
 
 // Load environment variables
@@ -72,25 +72,44 @@ app.get("/", (req, res) => {
 // Database connection and server start
 let isConnected = false
 
-const startServer = async () => {
-  try {
-    if (!isConnected) {
-      await connect()
-      isConnected = true
-      console.log("MongoDB connected successfully!")
-    }
+// Improved MongoDB connection with retry logic
+const connectWithRetry = async (retries = 5, interval = 5000) => {
+  let currentRetry = 0
 
-    if (NODE_ENV !== "production") {
-      app.listen(port, () => {
-        console.log(`Backend server connected on http://localhost:${port}`)
-      })
+  while (currentRetry < retries) {
+    try {
+      if (!isConnected) {
+        await connect()
+        isConnected = true
+        console.log("MongoDB connected successfully!")
+        return true
+      }
+      return true
+    } catch (error) {
+      currentRetry++
+      console.error(`MongoDB connection attempt ${currentRetry}/${retries} failed:`, error.message)
+
+      if (currentRetry >= retries) {
+        console.error("Max retries reached. Could not connect to MongoDB.")
+        if (NODE_ENV !== "production") {
+          process.exit(1)
+        }
+        return false
+      }
+
+      console.log(`Retrying in ${interval}ms...`)
+      await new Promise((resolve) => setTimeout(resolve, interval))
     }
-  } catch (error) {
-    console.error("Error while connecting to MongoDB:", error)
-    // Don't exit in production
-    if (NODE_ENV !== "production") {
-      process.exit(1)
-    }
+  }
+}
+
+const startServer = async () => {
+  await connectWithRetry()
+
+  if (NODE_ENV !== "production") {
+    app.listen(port, () => {
+      console.log(`Backend server connected on http://localhost:${port}`)
+    })
   }
 }
 
@@ -98,13 +117,13 @@ startServer()
 
 // Handle MongoDB connection for serverless environment
 app.use(async (req, res, next) => {
-  if (!isConnected) {
+  // Check if MongoDB is connected
+  if (!isConnected || mongoose.connection.readyState !== 1) {
     try {
-      await connect()
-      isConnected = true
+      await connectWithRetry(3, 1000) // Fewer retries and shorter interval for middleware
     } catch (error) {
       console.error("Error connecting to database in middleware:", error)
-      return res.status(500).json({ error: "Database connection failed" })
+      return res.status(503).json({ error: "Database service unavailable. Please try again later." })
     }
   }
   next()
