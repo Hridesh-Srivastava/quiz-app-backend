@@ -7,6 +7,7 @@ const timerSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   timeLeft: {
     type: Number,
@@ -22,5 +23,8 @@ const timerSchema = new Schema({
   },
 })
 
-export default mongoose.model("timer", timerSchema)
+// Check if model exists to prevent overwriting
+const Timer = mongoose.models.timer || mongoose.model("timer", timerSchema)
+
+export default Timer
 
