@@ -8,8 +8,17 @@ import connect from './database/conn.js';
 
 const app = express()
 
+// Configure CORS for production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-frontend-url.vercel.app', 'https://quiz-frontend-yourname.vercel.app'] 
+    : 'http://localhost:5173',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 app.use(morgan('tiny')); /*tiny format we use */
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 config();
 
@@ -18,16 +27,25 @@ const port = process.env.PORT || 5001;
 /* routes */
 app.use('/api', router) 
 
-
 app.get('/', (req, res) => {
     try {
-        res.json("Get Req.")
+        res.json("Quiz API is running")
     } catch (error) {
         res.json(error)
     }
 })
 
-connect().then(() => {
+// For Vercel serverless deployment
+if (process.env.NODE_ENV === 'production') {
+  // Listen directly in development, but export for Vercel in production
+  connect().then(() => {
+    console.log(`MongoDB connected successfully!`);
+  }).catch(error => {
+    console.log("Error while connecting to MongoDB", error);
+  });
+} else {
+  // Development mode
+  connect().then(() => {
     try {
         app.listen(port, () => {
             console.log(`Backend server connected on http://localhost:${port}`)
@@ -35,6 +53,10 @@ connect().then(() => {
     } catch (error) {
         console.log("Error while connecting to server!");
     }
-}).catch(error => {
+  }).catch(error => {
     console.log("Error while connecting to MongoDB");
-})
+  });
+}
+
+// Export for Vercel
+export default app;
