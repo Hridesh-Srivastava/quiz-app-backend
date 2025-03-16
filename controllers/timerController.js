@@ -11,11 +11,18 @@ export async function getTimer(req, res) {
       return res.status(400).json({ error: "Registration number is required" })
     }
 
+    // Validate registration number format to prevent 404 errors with invalid IDs
+    if (!/^[a-zA-Z0-9_-]+$/.test(registrationNumber)) {
+      console.log("Invalid registration number format:", registrationNumber)
+      return res.status(400).json({ error: "Invalid registration number format" })
+    }
+
     const timer = await Timer.findOne({ registrationNumber })
 
     if (!timer) {
       console.log("Timer not found for:", registrationNumber)
-      return res.status(404).json({ error: "Timer not found" })
+      // Return a 404 but with a proper JSON response
+      return res.status(404).json({ error: "Timer not found", registrationNumber })
     }
 
     // Calculate elapsed time since last update
@@ -45,6 +52,12 @@ export async function createTimer(req, res) {
 
     if (!registrationNumber) {
       return res.status(400).json({ error: "Registration number is required" })
+    }
+
+    // Validate registration number format
+    if (!/^[a-zA-Z0-9_-]+$/.test(registrationNumber)) {
+      console.log("Invalid registration number format:", registrationNumber)
+      return res.status(400).json({ error: "Invalid registration number format" })
     }
 
     // Check if timer already exists
@@ -85,6 +98,12 @@ export async function updateTimer(req, res) {
       return res.status(400).json({ error: "Registration number is required" })
     }
 
+    // Validate registration number format
+    if (!/^[a-zA-Z0-9_-]+$/.test(registrationNumber)) {
+      console.log("Invalid registration number format:", registrationNumber)
+      return res.status(400).json({ error: "Invalid registration number format" })
+    }
+
     const timer = await Timer.findOne({ registrationNumber })
 
     if (!timer) {
@@ -119,6 +138,12 @@ export async function deleteTimer(req, res) {
 
     if (!registrationNumber) {
       return res.status(400).json({ error: "Registration number is required" })
+    }
+
+    // Validate registration number format
+    if (!/^[a-zA-Z0-9_-]+$/.test(registrationNumber)) {
+      console.log("Invalid registration number format:", registrationNumber)
+      return res.status(400).json({ error: "Invalid registration number format" })
     }
 
     const result = await Timer.deleteOne({ registrationNumber })

@@ -41,7 +41,7 @@ const corsOptions = {
     if (isAllowed) {
       callback(null, true)
     } else {
-      console.log(`Origin ${origin} not allowed by CORS`)
+      console.log(`Origin ${origin} not allowed by CORS, but allowing in production`)
       callback(null, true) // Allow all origins in production for now
     }
   },
