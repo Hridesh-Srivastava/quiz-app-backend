@@ -3,7 +3,10 @@
     "builds": [
       {
         "src": "server.js",
-        "use": "@vercel/node"
+        "use": "@vercel/node",
+        "config": {
+          "runtime": "nodejs20.x"
+        }
       }
     ],
     "routes": [
@@ -15,9 +18,5 @@
         "src": "/(.*)",
         "dest": "server.js"
       }
-    ],
-    "env": {
-      "MONGODB_URI": "@mongodb_uri",
-      "DB_NAME": "test"
-    }
+    ]
   }
