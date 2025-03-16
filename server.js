@@ -73,13 +73,15 @@ import connect from "./database/conn.js"
 
 const app = express()
 
+const NODE_ENV = process.env.NODE_ENV || "development";
 // Configure CORS for production
 const corsOptions = {
   origin:
-    process.env.NODE_ENV === "production"
+    NODE_ENV === "production"
       ? [
           "https://frontend-quiz-cqklgfrfb-hridesh-srivastavas-projects.vercel.app",
           "https://frontend-quiz-hridesh-srivastavas-projects.vercel.app",
+          "https://frontend-quiz-tau.vercel.app"
         ]
       : "http://localhost:5173",
   credentials: true,
@@ -90,6 +92,7 @@ app.use(morgan("tiny")) /*tiny format we use */
 app.use(cors(corsOptions))
 app.use(express.json())
 config()
+app.options('*', cors(corsOptions));
 
 const port = process.env.PORT || 5001
 
