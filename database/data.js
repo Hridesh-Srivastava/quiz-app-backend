@@ -26,7 +26,7 @@ export default [
   },
   {
     id: 6,
-    question: "Which of the following is NOT a JavaScript framework?",
+    question: "What will be the output of the following code snippet?\n\nlet x = 5;\nconsole.log(typeof x);",
     options: ["Django", "React", "Angular"],
   },
   {
