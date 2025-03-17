@@ -60,7 +60,7 @@ router.route("/user").get(userController.getUsers).post(userController.createUse
 
 router.route("/user/:id").get(userController.getUser)
 
-// User verification (sign-in)
+// User verification (sign-in) - Fixed route order
 router.route("/user/verify").post(userController.verifyUser)
 
 export default router
