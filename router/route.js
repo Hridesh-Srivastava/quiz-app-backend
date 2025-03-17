@@ -36,6 +36,9 @@ import * as userController from "../controllers/userController.js"
 
 const router = Router()
 
+// User verification (sign-in) - Must be before /user/:id route to avoid conflict
+router.post("/user/verify", userController.verifyUser)
+
 // Questions routes
 router
   .route("/questions")
@@ -59,9 +62,6 @@ router
 router.route("/user").get(userController.getUsers).post(userController.createUser)
 
 router.route("/user/:id").get(userController.getUser)
-
-// User verification (sign-in) - Fixed route order
-router.route("/user/verify").post(userController.verifyUser)
 
 export default router
 
