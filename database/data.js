@@ -49,7 +49,17 @@ export default [
     question: "What is the correct way to create a JavaScript Date object for the current date?",
     options: ["new Date()", "Date.now()", "Date.current()"],
   },
+  {
+    id: 11,
+    question: "What is the correct way to create a JavaScript Date object for the current date?",
+    options: ["new Date()", "Date.now()", "Date.current()"],
+  },
+  {
+    id: 12,
+    question: "What is the correct way to create a JavaScript Date object for the current date?",
+    options: ["new Date()", "Date.now()", "Date.current()"],
+  },
 ]
 
-export const answers = [0, 1, 2, 1, 0, 0, 0, 1, 0, 0]
+export const answers = [0, 1, 2, 1, 0, 0, 0, 1, 0, 0, 1, 2 ]
 
