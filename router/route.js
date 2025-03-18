@@ -1,24 +1,63 @@
-import { Router } from "express"
-import * as controllers from "../controllers/controller.js"
-import * as timerController from "../controllers/timerController.js"
-import * as userController from "../controllers/userController.js"
+// import { Router } from "express"
+// import * as controllers from "../controllers/controller.js"
+// import * as timerController from "../controllers/timerController.js"
+// import * as userController from "../controllers/userController.js"
 
+// const router = Router()
+
+// // User verification (sign-in) - Must be before /user/:id route to avoid conflict
+// router.post("/user/verify", userController.verifyUser)
+
+// // Questions routes
+// router
+//   .route("/questions")
+//   .get(controllers.getQuestions)
+//   .post(controllers.insertQuestions)
+//   .delete(controllers.dropQuestions)
+
+// // Results routes
+// router.route("/result").get(controllers.getResult).post(controllers.storeResult).delete(controllers.dropResult)
+
+// // Timer routes
+// router.route("/timer").post(timerController.createTimer)
+
+// router
+//   .route("/timer/:registrationNumber")
+//   .get(timerController.getTimer)
+//   .put(timerController.updateTimer)
+//   .delete(timerController.deleteTimer)
+
+// // User routes
+// router.route("/user").get(userController.getUsers).post(userController.createUser)
+
+// router.route("/user/:id").get(userController.getUser)
+
+// export default router
+
+import { Router } from "express"
 const router = Router()
 
-// User verification (sign-in) - Must be before /user/:id route to avoid conflict
-router.post("/user/verify", userController.verifyUser)
+import * as controller from "../controllers/controller.js"
+import * as userController from "../controllers/userController.js"
+import * as timerController from "../controllers/timerController.js"
 
-// Questions routes
+/* Questions Routes API */
+
+/* GET,POST,DELETE Request */
 router
   .route("/questions")
-  .get(controllers.getQuestions)
-  .post(controllers.insertQuestions)
-  .delete(controllers.dropQuestions)
+  .get(controller.getQuestions)
+  .post(controller.insertQuestions)
+  .delete(controller.dropQuestions)
 
-// Results routes
-router.route("/result").get(controllers.getResult).post(controllers.storeResult).delete(controllers.dropResult)
+router.route("/result").get(controller.getResult).post(controller.storeResult).delete(controller.dropResult)
 
-// Timer routes
+/* User Routes API */
+router.route("/user").post(userController.createUser)
+router.route("/user/:registrationNumber").get(userController.getUser)
+router.route("/user/verify").post(userController.verifyUser) // Add this line
+
+/* Timer Routes API */
 router.route("/timer").post(timerController.createTimer)
 
 router
@@ -26,11 +65,6 @@ router
   .get(timerController.getTimer)
   .put(timerController.updateTimer)
   .delete(timerController.deleteTimer)
-
-// User routes
-router.route("/user").get(userController.getUsers).post(userController.createUser)
-
-router.route("/user/:id").get(userController.getUser)
 
 export default router
 
