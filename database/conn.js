@@ -7,7 +7,7 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/quiz"
 // Improved MongoDB connection function with better error handling
 async function connect() {
   try {
-    console.log("Connecting to MongoDB...")
+    console.log("Connecting to MongoDB...") //testing mongodb
 
     // Set mongoose options for better reliability
     const options = {
