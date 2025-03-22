@@ -72,7 +72,7 @@ export default [
   {
     id: 15,
     question: "What will dict1.update(dict2) do?",
-    options: ["Replace dict1 values with dict2 for matching keys", "Remove keys that are not in dict2", "Convert dict1 to a list", "Merge dictionaries without modifying dict1"],
+    options: ["Update dict1 from dict2 keys", "Remove keys that are not in dict2", "Convert dict1 to a list", "Merge dictionaries without modifying dict1"],
   },
   {
     id: 16,
